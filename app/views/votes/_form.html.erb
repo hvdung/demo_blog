@@ -1,0 +1,39 @@
+<% if(logged_in?) %>
+<div id="like-wrapper-global">
+<ul class="like-wrapper">
+  <li class="like-count"><span>Likes: <%= @post.get_upvotes.size %></span></li>
+  <% if(current_user.voted_down_on? @post) %>
+  <li class="like">
+    <%= link_to post_votes_path(@post), method: :post, remote: true do %>
+      <span><%= image_tag("like.png") %></span>
+    <% end %>
+  </li>
+  <% else %>
+  <li class="unlike">
+  <%= link_to post_vote_path(@post,@post.id), method: :delete, remote: true do %>
+    <span><%= image_tag("unlike.png") %></span>
+  <% end %> 
+  </li>
+  <% end %>
+</ul>
+
+<button type="button" class="btn-user-like-post" data-toggle="modal" data-target="#myModal">Show all users like post</button>
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">List users</h4>
+      </div>
+      <div class="modal-body">
+        <% @post.votes_for.up.by_type(User).voters.each do |user| %>
+            <li style="list-style:none">
+                <%= user.name %>
+            </li>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<% end %>
